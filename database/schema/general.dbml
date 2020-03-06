@@ -1,0 +1,81 @@
+/// Table `module`
+/// 模型模块数据。
+table module {
+    id int [primary key, increment]
+    name varchar
+    description text
+    parent int [ref: > module.id]
+    sequence int
+    weight float
+}
+
+/// Table `level`
+/// 准备度等级定义。
+table level {
+    id int [pk, increment]
+    sequence int
+    name varchar
+    description text
+}
+
+/// Table `essential`
+/// 模块等级要求。
+table essential {
+    id int [pk, increment]
+    module int [ref: > module.id]
+    level int [ref: > level.id]
+    sequence int
+    body varchar
+    hint text
+    weight float
+}
+
+/// Table `industry`
+/// 行业分类代码。
+table industry {
+    id int [pk, increment]
+    name varchar
+    parent int [ref: > industry.id]
+}
+
+/// Table `enterprise`
+/// 评估企业基本信息
+table enterprise {
+    id int [pk, increment]
+    name varchar
+    uscc varchar
+    address varchar
+    registered date
+    status int
+    created timestamp
+}
+
+/// Table `survey`
+/// 评估调查问卷。
+table survey {
+    id int [pk, increment]
+    enterprise int
+    submitted date
+    submitter varchar
+    mobile varchar
+    email varchar
+}
+
+/// Table `submittal`
+/// 问卷调查结果。
+table submittal {
+    id int [pk, increment]
+    survey int [ref: > survey.id]
+    essential int [ref: >essential.id]
+    answer int
+}
+
+/// Table `result`
+/// 问卷调研评估结果。
+table result {
+    id int [pk, increment]
+    survey int [ref: > survey.id]
+    module int [ref: > module.id]
+    score float
+    created timestamp
+}
