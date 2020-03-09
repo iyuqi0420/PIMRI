@@ -6,7 +6,7 @@ table module {
     description text
     parent int [ref: > module.id]
     sequence int
-    weight float
+    hierarchy int
     created timestamp [not null, default: CURRENT_TIMESTAMP]
     updated timestamp
     deleted timestamp
@@ -19,6 +19,7 @@ table level {
     sequence int
     name varchar
     description text
+    hint text
     created timestamp [not null, default: CURRENT_TIMESTAMP]
     updated timestamp
     deleted timestamp
@@ -31,6 +32,8 @@ table moduleLevel {
     module int [not null, ref: > module.id]
     level int [not null, ref: > level.id]
     description text
+    hint text
+    weight float
     created timestamp [not null, default: CURRENT_TIMESTAMP]
     updated timestamp
     deleted timestamp
