@@ -7,6 +7,9 @@ table module {
     parent int [ref: > module.id]
     sequence int
     weight float
+    created timestamp [not null, default: CURRENT_TIMESTAMP]
+    updated timestamp
+    deleted timestamp
 }
 
 /// Table `level`
@@ -16,6 +19,21 @@ table level {
     sequence int
     name varchar
     description text
+    created timestamp [not null, default: CURRENT_TIMESTAMP]
+    updated timestamp
+    deleted timestamp
+}
+
+/// Table `moduleLevel`
+/// 模块等级定义
+table moduleLevel {
+    id int [pk, increment]
+    module int [not null, ref: > module.id]
+    level int [not null, ref: > level.id]
+    description text
+    created timestamp [not null, default: CURRENT_TIMESTAMP]
+    updated timestamp
+    deleted timestamp
 }
 
 /// Table `essential`
@@ -28,54 +46,70 @@ table essential {
     body varchar
     hint text
     weight float
+    created timestamp [not null, default: CURRENT_TIMESTAMP]
+    updated timestamp
+    deleted timestamp
 }
 
 /// Table `industry`
 /// 行业分类代码。
 table industry {
     id int [pk, increment]
-    name varchar
+    name varchar [not null, unique]
     parent int [ref: > industry.id]
+    created timestamp [not null, default: CURRENT_TIMESTAMP]
+    updated timestamp
+    deleted timestamp
 }
 
 /// Table `enterprise`
 /// 评估企业基本信息
 table enterprise {
     id int [pk, increment]
-    name varchar
-    uscc varchar
-    address varchar
+    name varchar [not null, unique]
+    uscc varchar [not null, unique]
+    address varchar [not null]
+    industry int [ref: > industry.id]
     registered date
-    status int
-    created timestamp
+    status int [not null, default: 1]
+    created timestamp [not null, default: CURRENT_TIMESTAMP]
+    updated timestamp
+    deleted timestamp
 }
 
 /// Table `survey`
 /// 评估调查问卷。
 table survey {
     id int [pk, increment]
-    enterprise int
-    submitted date
-    submitter varchar
-    mobile varchar
-    email varchar
+    enterprise int [not null, ref: > enterprise.id]
+    submitted date [not null]
+    submitter varchar [not null]
+    mobile varchar [not null]
+    email varchar [not null]
+    created timestamp [not null, default: CURRENT_TIMESTAMP]
+    updated timestamp
+    deleted timestamp
 }
 
 /// Table `submittal`
 /// 问卷调查结果。
 table submittal {
     id int [pk, increment]
-    survey int [ref: > survey.id]
-    essential int [ref: >essential.id]
-    answer int
+    survey int [not null, ref: > survey.id]
+    essential int [not null, ref: >essential.id]
+    answer varchar [not null]
+    created timestamp [not null, default: CURRENT_TIMESTAMP]
+    updated timestamp
+    deleted timestamp
 }
 
 /// Table `result`
 /// 问卷调研评估结果。
-table result {
+table score {
     id int [pk, increment]
-    survey int [ref: > survey.id]
-    module int [ref: > module.id]
+    survey int [not null, ref: > survey.id]
+    module int [not null, ref: > module.id]
+    level int [not null, ref: > level.id]
     score float
     created timestamp
 }
